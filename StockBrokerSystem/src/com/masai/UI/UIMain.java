@@ -2,8 +2,10 @@ package com.masai.UI;
 
 import java.util.Scanner;
 
+import com.masai.EXCEPTION.NoRecordFoundException;
+
 public class UIMain {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NoRecordFoundException {
 		Scanner scanner = new Scanner(System.in);
 		 boolean quit = false;
 	        while (!quit) {
