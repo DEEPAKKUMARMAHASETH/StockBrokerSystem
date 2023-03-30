@@ -1,62 +1,82 @@
 package com.masai.UI;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
+import com.masai.DAO.BrokerDAO;
+import com.masai.DAO.BrokerDAOImpl;
 import com.masai.DAO.CustomerDAO;
 import com.masai.DAO.CustomerDAOImpl;
 import com.masai.DTO.Customer;
 import com.masai.DTO.CustomerImpl;
+import com.masai.DTO.Stock;
+import com.masai.DTO.StockData;
+import com.masai.DTO.Transaction;
+import com.masai.EXCEPTION.InsufficientBalanceException;
+import com.masai.EXCEPTION.InsufficientSharesException;
 import com.masai.EXCEPTION.InvalidCredentialsException;
 import com.masai.EXCEPTION.NoRecordFoundException;
 import com.masai.EXCEPTION.SomethingWentWrongException;
 
 public class CustomerUI {
+	static Customer customer;
 	public static void customerLogin(Scanner scanner) {
-		
-		if(isCustomerLogged.isLogged) {
-			try {
-				showUserMenu(scanner);
-			} catch (NoRecordFoundException e) {
-				System.out.println(e.getMessage());
-			}
-		}else {
-			int choice;
 
-	        do {
-	            System.out.println("Main Menu");
-	            System.out.println("1. Sign Up");
-	            System.out.println("2. Login");
-	            System.out.println("3. Exit");
-	            System.out.print("Enter your choice: ");
-	            choice = scanner.nextInt();
+	    if (isCustomerLogged.isLogged) {
+	        try {
+	            showUserMenu(scanner);
+	        } catch (NoRecordFoundException e) {
+	            System.out.println(e.getMessage());
+	        }
+	    } else {
+	        int choice;
 
-	            switch (choice) {
-	                case 1:
-	                    signUp(scanner);
-	                    break;
-	                case 2:
-	                    login(scanner);
-	                    break;
-	                case 3:
-	                    System.out.println("Goodbye!");
-	                    break;
-	                default:
-	                    System.out.println("Invalid choice!");
-	            }
-	        } while (choice != 3);
-		}
-		
+	        try {
+	            do {
+	                System.out.println("Main Menu");
+	                System.out.println("1. Sign Up");
+	                System.out.println("2. Login");
+	                System.out.println("3. Exit");
+	                System.out.print("Enter your choice: ");
+	                choice = scanner.nextInt();
+	                scanner.nextLine(); // clear input buffer
+
+	                switch (choice) {
+	                    case 1:
+	                        signUp(scanner);
+	                        break;
+	                    case 2:
+	                        login(scanner);
+	                        break;
+	                    case 3:
+	                        System.out.println("Goodbye!");
+	                        break;
+	                    default:
+	                        System.out.println("Invalid choice!");
+	                }
+	            } while (choice != 3);
+	        } catch (InputMismatchException e) {
+	            System.out.println("Please enter numeric value in the list");
+	            scanner.nextLine(); // clear input buffer
+	        }
+
+	    }
 
 	}
+
 	
     private static void login(Scanner scanner) {
         System.out.println("Enter username");
         String username = scanner.next();
         System.out.println("Enter Password");
         String password = scanner.next();
-        CustomerDAO daoLayer = new CustomerDAOImpl();
+        CustomerDAO<?> daoLayer = new CustomerDAOImpl();
        try {
-		Customer customer =  daoLayer.authenticateCustomer(username, password);
+		customer =  daoLayer.authenticateCustomer(username, password);
+		isCustomerLogged.isLogged=true;
 		System.out.println("You're logged in!!!");
 		try {
 			showUserMenu(scanner);
@@ -89,7 +109,7 @@ public class CustomerUI {
     	  int isActive = scanner.nextInt();
     	  Customer customer = new CustomerImpl( firstName,  lastName,  username,  mobileNumber,  address,
   				 email,  password,  walletBalance,  isActive);
-    	  CustomerDAO daoLayer = new CustomerDAOImpl();
+    	  CustomerDAO<?> daoLayer = new CustomerDAOImpl();
     	  try {
     		  daoLayer.addCustomer(customer);
     		  System.out.println("Customer Added Successfully!!");
@@ -101,7 +121,94 @@ public class CustomerUI {
     	isCustomerLogged.isLogged= false;
     	System.out.println("You're Logged Out!!!!!");
     }
-	
+    
+    static boolean showStock(int id) {
+    	CustomerDAO<?> daoLayer = new CustomerDAOImpl();
+    	List<StockData> list = new ArrayList<>();
+    	try {
+    		 list = daoLayer.getAllStockData(id);
+    		 if (list != null && !list.isEmpty()) {
+    			    // code to display the list of stocks
+    			 for(StockData i : list) {
+    				 System.out.println("Stock ID: " + i.getStockId() + ", Name: " 
+    						 + i.getStockName() + ", Quantity: " + 
+    						 i.getQuantity() + ", Price: " + i.getPrice());
+    			 }
+    			} else {
+    			    System.out.println("no stock in your portfolio");
+    			    return false;
+    			}
+    		
+    		
+    	}catch(NoRecordFoundException e) {
+    		System.out.println(e.getMessage());
+    	}
+		return true;
+    }
+    
+    private static void buySellStocks(Scanner scanner) {
+    	if(!isCustomerLogged.isLogged) {
+    		System.out.println("You're not login please login first");
+    		return;
+    	}else {
+    		System.out.println("What do you want Buy Or Sell\nPlease entry 1 for Buy and 0 for sell");
+    		int choice = scanner.nextInt();
+    		CustomerDAO<?> daoLayer = new CustomerDAOImpl();
+    			if(choice == 1) {
+//    				int customerId, int stockId, int quantity
+    				BrokerUI viewStock = new BrokerUI();
+                	viewStock.viewStock();
+                	System.out.println("Enter Stock Id from the list");
+    				int stockId= scanner.nextInt();
+    				System.out.println("Enter Quantity");
+    				int quantity = scanner.nextInt();
+    				
+    				try {
+						daoLayer.buyStocks(customer.getId(), stockId, quantity);
+					} catch (InsufficientBalanceException | NoRecordFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    				System.out.println("Congratulation your stock order has been completed");
+    			}else {
+    				if(showStock(customer.getId())) {;
+    				System.out.println("Enter Stock Id from the list");
+    				BrokerUI viewStock = new BrokerUI();
+    				int stockId= scanner.nextInt();
+    				System.out.println("Enter Quantity");
+    				int quantity = scanner.nextInt();
+    				
+    				try {
+						daoLayer.sellStock(customer.getId(), stockId, quantity);
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InsufficientSharesException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoRecordFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    				System.out.println("Congratulation your stock order has been completed");
+    				}
+    				
+    			}
+    	}
+		
+		
+	}
+    
+    static void viewTransactionHistory() {
+    	CustomerDAO<?> daoLayer  = new CustomerDAOImpl();
+    	try {
+			List<Transaction> list = daoLayer.viewTransactionHistory(customer.getId()); 
+			list.forEach(System.out::println);
+		} catch (NoRecordFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+    }
 	 private static void showUserMenu(Scanner scanner) throws NoRecordFoundException {
 	        int choice;
 
@@ -121,10 +228,10 @@ public class CustomerUI {
 	                	viewStock.viewStock();
 	                    break;
 	                case 2:
-	                    //buySellStocks();
+	                    buySellStocks(scanner);
 	                    break;
 	                case 3:
-	                   // viewTransactionHistory();
+	                   viewTransactionHistory();
 	                    break;
 	                case 4:
 	                    //addWithdrawFunds();
@@ -138,4 +245,6 @@ public class CustomerUI {
 	        } while (choice != 5);
 
 	    }
+
+	
 }

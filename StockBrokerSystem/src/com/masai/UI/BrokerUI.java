@@ -2,6 +2,7 @@ package com.masai.UI;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +23,7 @@ public class BrokerUI {
 		}else {
 			System.out.println("Enter Username!");
 			String username = sc.next();
-			System.out.println("Enter Password");
+			System.out.println("Enter Password!");
 			String password = sc.next();
 			if(username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin")) {
 				isBrokerLogged.logged=true;
@@ -67,7 +68,7 @@ public class BrokerUI {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+		
 	static void deleteStock(Scanner sc) {
 		System.out.println("Enter Stock ID");
 		int id = sc.nextInt();
@@ -100,58 +101,64 @@ public class BrokerUI {
 	static void brokerMenu(Scanner sc) throws NoRecordFoundException {
 		System.out.println("Welcome Broker");
 		while (isBrokerLogged.logged) {
-            System.out.println("-------- Broker Menu --------");
-            System.out.println("1. View all customers");
-            System.out.println("2. Add new stocks");
-            System.out.println("3. View all stocks");
-            System.out.println("4. View consolidated report of a stock");
-            System.out.println("5. Delete customer");
-            System.out.println("6. Delete stock");
-            System.out.println("7. Logout");
-            System.out.println("-------------------------------");
-            
-            System.out.print("Enter your choice: ");
-            int choice = sc.nextInt();
-            BrokerDAO daoLayer = new BrokerDAOImpl();
-            
-            switch (choice) {
-            case 1:
-                try {
-					List<Customer> list = daoLayer.viewAllCustomers();
-					
-					for(Customer i: list) {
-						System.out.println(
-						"CustomerID: "+i.getId()+" FirstName:" + i.getFirstName()+
-						" LastName: "+i.getLastName()+" Username: "+i.getUsername()+
-						" Email: "+i.getEmail()+" WalletBalance: "+i.getWalletBalance());
-					}
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-                break;
-            case 2:
-            	addStock(sc);
-                break;
-            case 3:
-                viewStock();
-                break;
-            case 4:
-                //viewConsolidatedReport();
-                break;
-            case 5:
-                deleteCustomer(sc);
-                break;
-            case 6:
-                deleteStock(sc);
-                break;
-            case 0:
-                isBrokerLogged.logged = false;
-                break;
-            default:
-                System.out.println("Invalid choice");
-                break;
-        }
-    }
+			try {
+				 System.out.println("-------- Broker Menu --------");
+		            System.out.println("1. View all customers");
+		            System.out.println("2. Add new stocks");
+		            System.out.println("3. View all stocks");
+		            System.out.println("4. View consolidated report of a stock");
+		            System.out.println("5. Delete customer");
+		            System.out.println("6. Delete stock");
+		            System.out.println("7. Logout");
+		            System.out.println("-------------------------------");
+		            
+		            System.out.print("Enter your choice: ");
+		            int choice = sc.nextInt();
+		            BrokerDAO daoLayer = new BrokerDAOImpl();
+		            
+		            switch (choice) {
+		            case 1:
+		                try {
+							List<Customer> list = daoLayer.viewAllCustomers();
+							
+							for(Customer i: list) {
+								System.out.println(
+								"CustomerID: "+i.getId()+" FirstName:" + i.getFirstName()+
+								" LastName: "+i.getLastName()+" Username: "+i.getUsername()+
+								" Email: "+i.getEmail()+" WalletBalance: "+i.getWalletBalance());
+							}
+						} catch (SQLException e) {
+							System.out.println(e.getMessage());
+						}
+		                break;
+		            case 2:
+		            	addStock(sc);
+		                break;
+		            case 3:
+		                viewStock();
+		                break;
+		            case 4:
+		                //viewConsolidatedReport();
+		                break;
+		            case 5:
+		                deleteCustomer(sc);
+		                break;
+		            case 6:
+		                deleteStock(sc);
+		                break;
+		            case 7:
+		                isBrokerLogged.logged = false;
+		                break;
+		            default:
+		                System.out.println("Invalid choice");
+		                break;
+		        }
+		    }catch(InputMismatchException e) {
+		    	System.out.println("Please enter numeric value");
+		    	sc.nextLine();
+		    }
+			}
+           
 	}
 }
 
