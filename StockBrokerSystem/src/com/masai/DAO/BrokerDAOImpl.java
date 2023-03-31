@@ -107,18 +107,20 @@ public class BrokerDAOImpl implements BrokerDAO {
 		return list;
 	}
 	
-	public void deleteStock(int id) throws SomethingWentWrongException{
+	public boolean deleteStock(int id) throws SomethingWentWrongException{
 		Connection con = null;
 		try {
 			con = DBUtils.getConnection();
 		 PreparedStatement pr = con.prepareStatement("DELETE FROM STOCK WHERE stock_id = ?");
 		 pr.setInt(1, id);
 		 pr.executeUpdate();
+		 return true;
 		}catch(SQLException | ClassNotFoundException e) {
 			throw new SomethingWentWrongException("Something went wrong ");
 		}finally {
 			try {
 				DBUtils.closeConnection(con);
+				return false;
 			}catch(SQLException e) {
 				
 			}

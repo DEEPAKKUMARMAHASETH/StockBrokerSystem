@@ -20,4 +20,6 @@ public interface CustomerDAO<Throws> {
 	public List<StockData> getAllStockData(int id) throws NoRecordFoundException;
 	
 	public List<Transaction> viewTransactionHistory(int id) throws NoRecordFoundException;
+
+	public void addMoney(int id, double amount) throws SomethingWentWrongException;
 }

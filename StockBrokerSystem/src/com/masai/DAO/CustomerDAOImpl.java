@@ -483,94 +483,30 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 
+	@Override
+	public void addMoney(int id, double amount) throws SomethingWentWrongException {
+		// TODO Auto-generated method stub
+		Connection con = null;
+		try {
+			con = DBUtils.getConnection();
+			double wallet_balance = checkWalletBalance(id);
+			String query = "UPDATE customer SET wallet_balance = ? + ? WHERE customer_id=?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setDouble(1, wallet_balance);
+			ps.setDouble(2, amount);
+			ps.setInt(3, id);
+			
+			ps.executeUpdate();
+			
+		}catch(SQLException | ClassNotFoundException | NoRecordFoundException e) {
+			throw new SomethingWentWrongException("something went wrong please retry");
+		}finally {
+			try {
+				DBUtils.closeConnection(con);
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
-
-
-
-
-
-
-
-
-
-
-//public boolean buyStocks(int customerId, int stockId, int quantity) throws InsufficientBalanceException, NoRecordFoundException {
-//    Connection connection = null;
-//    boolean isSuccessful = false;
-//    try {
-//        connection = DBUtils.getConnection();
-//        connection.setAutoCommit(false); // start transaction
-//
-//        // fetch customer data
-//        double walletBalance = checkWalletBalance(customerId);
-//        double stockPrice = fetchStockPrice(stockId);
-//        double totalCost = stockPrice * quantity;
-//
-//        // check if customer has sufficient balance
-//        if (walletBalance < totalCost) {
-//            throw new InsufficientBalanceException("Customer with ID " + customerId + " has insufficient balance.");
-//        }
-//
-//        // update customer wallet balance
-//        String updateCustomerQuery = "UPDATE customer SET wallet_balance = ? WHERE customer_id = ? AND is_active = 1";
-//        PreparedStatement updateCustomerStatement = connection.prepareStatement(updateCustomerQuery);
-//        updateCustomerStatement.setDouble(1, walletBalance - totalCost);
-//        updateCustomerStatement.setInt(2, customerId);
-//        int updateCustomerResult = updateCustomerStatement.executeUpdate();
-//
-//        // check if update was successful
-//        if (updateCustomerResult == 0) {
-//            throw new NoRecordFoundException("No customer record found with ID: " + customerId);
-//        }
-//
-//        // update stock quantity
-//        String updateStockQuery = "UPDATE stock SET quantity = quantity - ? WHERE stock_id = ? AND is_deleted = 0";
-//        PreparedStatement updateStockStatement = connection.prepareStatement(updateStockQuery);
-//        updateStockStatement.setInt(1, quantity);
-//        updateStockStatement.setInt(2, stockId);
-//        int updateStockResult = updateStockStatement.executeUpdate();
-//
-//        // check if update was successful
-//        if (updateStockResult == 0) {
-//            throw new NoRecordFoundException("No stock record found with ID: " + stockId);
-//        }
-//
-//        // add transaction record
-//        String addTransactionQuery = "INSERT INTO transaction (customer_id, stock_id, transaction_type, quantity, price, total_amount) VALUES (?, ?, ?, ?, ?, ?)";
-//        PreparedStatement addTransactionStatement = connection.prepareStatement(addTransactionQuery);
-//        addTransactionStatement.setInt(1, customerId);
-//        addTransactionStatement.setInt(2, stockId);
-//        addTransactionStatement.setString(3, "BUY");
-//        addTransactionStatement.setInt(4, quantity);
-//        addTransactionStatement.setDouble(5, stockPrice);
-//        addTransactionStatement.setDouble(6, totalCost);
-//        int addTransactionResult = addTransactionStatement.executeUpdate();
-//
-//        // check if transaction was added successfully
-//        if (addTransactionResult == 0) {
-//            throw new SQLException("Failed to add transaction record.");
-//        }
-//
-//        connection.commit(); // commit transaction
-//        isSuccessful = true;
-//    } catch (SQLException | ClassNotFoundException e) {
-//        try {
-//            if (connection != null) {
-//                connection.rollback(); // rollback transaction
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//        e.printStackTrace();
-//    } finally {
-//        try {
-//            if (connection != null) {
-//                connection.setAutoCommit(true); // reset auto-commit
-//                connection.close();
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    return isSuccessful;
-//}
