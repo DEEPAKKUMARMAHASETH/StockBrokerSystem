@@ -14,5 +14,5 @@ public interface BrokerDAO {
 	public List<Stock> viewAllStocks() throws NoRecordFoundException;
 	
 	public boolean deleteCustomer(int id) throws SomethingWentWrongException;
-	public void deleteStock(int id) throws SomethingWentWrongException;
+	public boolean deleteStock(int id) throws SomethingWentWrongException;
 }

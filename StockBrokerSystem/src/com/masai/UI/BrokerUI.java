@@ -73,10 +73,13 @@ public class BrokerUI {
 		System.out.println("Enter Stock ID");
 		int id = sc.nextInt();
 		
+		BrokerDAO daoLayer = new BrokerDAOImpl();
 		try {
-			BrokerDAO daoLayer = new BrokerDAOImpl();
-			daoLayer.deleteStock(id);
-			System.out.println("Stock Deleted successfully");
+			if(daoLayer.deleteStock(id)) {
+				System.out.println("Stock Deleted successfully");				
+			}else {
+				System.out.println("No Stock Found");
+			}
 		}catch(SomethingWentWrongException ms) {
 			System.out.println(ms.getMessage());
 		}

@@ -209,6 +209,39 @@ public class CustomerUI {
 			System.out.println(e.getMessage());
 		}
     }
+    private static void addWithdrawFunds(Scanner scanner) {
+		// TODO Auto-generated method stub
+    	boolean flag = true;
+    	while(flag) {
+    		System.out.println("Enter 1 for Add Amount 0 for Withdraw Amount\n3.Exit");
+    		int choice = scanner.nextInt();
+    		switch(choice) {
+    			case 1:
+    				addMoney(scanner);
+    				break;
+    			case 0:
+    				break;
+    			case 3:
+    				flag=false;
+    			default:
+    				System.out.println("Invalid choice");
+    		}
+    	}
+		
+	}
+    private static  void addMoney(Scanner sc) {
+    	CustomerDAO daoLayer  = new CustomerDAOImpl();
+    	System.out.println("Enter Amount");
+    	double amount = sc.nextDouble();
+    	try {
+    		daoLayer.addMoney(customer.getId(), amount);
+    		System.out.println("Amount added successfully!");
+    		
+    	}catch(SomethingWentWrongException e) {
+    		System.out.println(e.getMessage());
+    	}
+    	
+    }
 	 private static void showUserMenu(Scanner scanner) throws NoRecordFoundException {
 	        int choice;
 
@@ -225,7 +258,7 @@ public class CustomerUI {
 	            switch (choice) {
 	                case 1:
 	                	BrokerUI viewStock = new BrokerUI();
-	                	viewStock.viewStock();
+	                	BrokerUI.viewStock();
 	                    break;
 	                case 2:
 	                    buySellStocks(scanner);
@@ -234,7 +267,7 @@ public class CustomerUI {
 	                   viewTransactionHistory();
 	                    break;
 	                case 4:
-	                    //addWithdrawFunds();
+	                    addWithdrawFunds(scanner);
 	                    break;
 	                case 5:
 	                    logout();
@@ -245,6 +278,9 @@ public class CustomerUI {
 	        } while (choice != 5);
 
 	    }
+
+
+	
 
 	
 }
