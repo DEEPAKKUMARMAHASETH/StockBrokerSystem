@@ -22,4 +22,5 @@ public interface CustomerDAO<Throws> {
 	public List<Transaction> viewTransactionHistory(int id) throws NoRecordFoundException;
 
 	public void addMoney(int id, double amount) throws SomethingWentWrongException;
+	public void withdrawMoney(int id, double amount) throws SomethingWentWrongException, InsufficientBalanceException;
 }

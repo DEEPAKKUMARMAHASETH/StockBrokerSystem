@@ -220,6 +220,7 @@ public class CustomerUI {
     				addMoney(scanner);
     				break;
     			case 0:
+    				withdrawMoney(scanner);
     				break;
     			case 3:
     				flag=false;
@@ -229,7 +230,23 @@ public class CustomerUI {
     	}
 		
 	}
-    private static  void addMoney(Scanner sc) {
+    private static void withdrawMoney(Scanner scanner) {
+    	CustomerDAO daoLayer  = new CustomerDAOImpl();
+    	System.out.println("Enter Amount");
+    	double amount = scanner.nextDouble();
+    	try {
+    		daoLayer.withdrawMoney(customer.getId(), amount);
+    		System.out.println("Amount Withdrawn successfully!");
+    		
+    	}catch(SomethingWentWrongException | InsufficientBalanceException e) {
+    		System.out.println(e.getMessage());
+    	}
+    	
+		
+	}
+
+
+	private static  void addMoney(Scanner sc) {
     	CustomerDAO daoLayer  = new CustomerDAOImpl();
     	System.out.println("Enter Amount");
     	double amount = sc.nextDouble();
