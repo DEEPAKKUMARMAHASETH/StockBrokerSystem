@@ -15,4 +15,5 @@ public interface BrokerDAO {
 	
 	public boolean deleteCustomer(int id) throws SomethingWentWrongException;
 	public boolean deleteStock(int id) throws SomethingWentWrongException;
+	public int[] viewStockReport(String stockName) throws SomethingWentWrongException;
 }

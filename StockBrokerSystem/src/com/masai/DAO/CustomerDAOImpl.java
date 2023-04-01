@@ -508,5 +508,33 @@ public class CustomerDAOImpl implements CustomerDAO{
 			}
 		}
 	}
+	public void withdrawMoney(int id, double amount) throws SomethingWentWrongException, InsufficientBalanceException {
+	    Connection con = null;
+	    try {
+	        con = DBUtils.getConnection();
+	        double wallet_balance = checkWalletBalance(id);
+
+	        if (wallet_balance < amount) {
+	            throw new InsufficientBalanceException("You don't have enough balance in your wallet.");
+	        }
+
+	        String query = "UPDATE customer SET wallet_balance = ? - ? WHERE customer_id=?";
+	        PreparedStatement ps = con.prepareStatement(query);
+	        ps.setDouble(1, wallet_balance);
+	        ps.setDouble(2, amount);
+	        ps.setInt(3, id);
+
+	        ps.executeUpdate();
+
+	    } catch (SQLException | ClassNotFoundException | NoRecordFoundException e) {
+	        throw new SomethingWentWrongException("Something went wrong. Please try again.");
+	    } finally {
+	        try {
+	            DBUtils.closeConnection(con);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 
 }

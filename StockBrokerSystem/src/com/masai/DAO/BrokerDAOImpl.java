@@ -151,4 +151,46 @@ public class BrokerDAOImpl implements BrokerDAO {
 				}
 			}
 	    }
+	 public int[] viewStockReport(String stockName) throws SomethingWentWrongException {
+			// TODO Auto-generated method stub
+			Connection con = null;
+			int[] arr = new int[2];
+			try {
+				con = DBUtils.getConnection();
+				
+				//get total number of pieces sold for a stock
+				String querySold = "select sum(quantity) from customer_stock where name = ?";
+				PreparedStatement psSold = con.prepareStatement(querySold);
+				psSold.setString(1, stockName);
+				ResultSet rsSold = psSold.executeQuery();
+				int soldQuantity = 0;
+				if(rsSold.next()) {
+					soldQuantity = rsSold.getInt(1);
+				}
+				
+				//get total number of pieces yet to be sold for a stock
+				String queryRemaining = "SELECT quantity FROM stock WHERE name = ?";
+				PreparedStatement psRemaining = con.prepareStatement(queryRemaining);
+				psRemaining.setString(1, stockName);
+				ResultSet rsRemaining = psRemaining.executeQuery();
+				int remainingQuantity = 0;
+				if(rsRemaining.next()) {
+					remainingQuantity = rsRemaining.getInt(1);
+				}
+				arr[0]=soldQuantity;
+				arr[1]=remainingQuantity;
+				
+			}catch(SQLException | ClassNotFoundException e) {
+				throw new SomethingWentWrongException("something went wrong please retry");
+			}finally {
+				try {
+					DBUtils.closeConnection(con);
+				}catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return arr;
+		}
+
+
 }

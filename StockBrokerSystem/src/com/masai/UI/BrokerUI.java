@@ -101,6 +101,23 @@ public class BrokerUI {
 			System.out.println(e.getMessage());
 		}
 	}
+	private static void viewConsolidatedReport(Scanner sc) {
+		// TODO Auto-generated method stub
+		System.out.println("Enter stock name");
+		String name = sc.next();
+		BrokerDAO daoLayer = new BrokerDAOImpl();
+		try {
+			
+			int[] arr = daoLayer.viewStockReport(name);
+
+			System.out.println("Consolidated Report for Stock: " + name);
+			System.out.println("Total pieces sold: " + arr[0]);
+			System.out.println("Total pieces yet to be sold: " + arr[1]);
+		}catch(SomethingWentWrongException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
 	static void brokerMenu(Scanner sc) throws NoRecordFoundException {
 		System.out.println("Welcome Broker");
 		while (isBrokerLogged.logged) {
@@ -141,7 +158,7 @@ public class BrokerUI {
 		                viewStock();
 		                break;
 		            case 4:
-		                //viewConsolidatedReport();
+		                viewConsolidatedReport(sc);
 		                break;
 		            case 5:
 		                deleteCustomer(sc);
@@ -163,5 +180,6 @@ public class BrokerUI {
 			}
            
 	}
+	
 }
 
