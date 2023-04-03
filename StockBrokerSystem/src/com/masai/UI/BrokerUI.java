@@ -76,9 +76,10 @@ public class BrokerUI {
 		BrokerDAO daoLayer = new BrokerDAOImpl();
 		try {
 			if(daoLayer.deleteStock(id)) {
+				
 				System.out.println("Stock Deleted successfully");				
 			}else {
-				System.out.println("No Stock Found");
+				System.out.println("No stock found");
 			}
 		}catch(SomethingWentWrongException ms) {
 			System.out.println(ms.getMessage());
