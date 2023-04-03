@@ -33,6 +33,7 @@ public class BrokerDAOImpl implements BrokerDAO {
 			        			, resultSet.getString(6),
 			    				resultSet.getString(7), resultSet.getString(8), resultSet.getDouble(9)
 			    				, resultSet.getInt(10));
+			        	
 			        	customer.setId(resultSet.getInt(1));
 			            customerList.add(customer);
 
@@ -113,14 +114,15 @@ public class BrokerDAOImpl implements BrokerDAO {
 			con = DBUtils.getConnection();
 		 PreparedStatement pr = con.prepareStatement("DELETE FROM STOCK WHERE stock_id = ?");
 		 pr.setInt(1, id);
-		 pr.executeUpdate();
-		 return true;
+		 if(pr.executeUpdate() > 0)
+			 return true;
+		 return false;
 		}catch(SQLException | ClassNotFoundException e) {
 			throw new SomethingWentWrongException("Something went wrong ");
 		}finally {
 			try {
 				DBUtils.closeConnection(con);
-				return false;
+//				return true;
 			}catch(SQLException e) {
 				
 			}
