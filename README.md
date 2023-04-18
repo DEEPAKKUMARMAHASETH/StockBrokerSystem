@@ -23,10 +23,6 @@ Exceptions:
 
 The program handles exceptions such as duplicate email, incorrect stock name, batch name, etc. Appropriate error messages are displayed to the user when these exceptions occur.
 
-ER Diagram:
-
-Please refer to the ER Diagram file included in this repository for a visual representation of the database design.
-
 Dependencies:
 
 The program uses Java and MySQL. The required dependencies are included in the pom.xml file.
