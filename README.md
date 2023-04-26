@@ -2,7 +2,7 @@
 This is a Stock Broker System that allows customers to trade and invest in shares. The system consists of two types of users: brokers and customers. Brokers have access to functions such as viewing customers, adding new stocks, viewing all stocks, deleting customers, deleting stocks, and logging out. Customers have access to functions such as signing up, logging in, viewing all stocks, buying and selling stocks, viewing transaction history, adding and withdrawing funds, logging out, and deleting their account.
 
 Database Design:
-
+![Database Scheama](https://user-images.githubusercontent.com/71522419/234503281-ee24169a-c2f9-4520-8924-d7639b10efb9.jpg)
 The database consists of the following tables:
 
 Broker - stores information about the broker, including their username and password.
