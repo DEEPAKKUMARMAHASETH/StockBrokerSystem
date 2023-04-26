@@ -3,6 +3,14 @@ This is a Stock Broker System that allows customers to trade and invest in share
 
 Database Design:
 ![Database Scheama](https://user-images.githubusercontent.com/71522419/234503281-ee24169a-c2f9-4520-8924-d7639b10efb9.jpg)
+
+
+
+#Features:-
+-Buy A Stock
+-Sell A stock
+-See Transaction
+-Manage Wallet
 The database consists of the following tables:
 
 Broker - stores information about the broker, including their username and password.
