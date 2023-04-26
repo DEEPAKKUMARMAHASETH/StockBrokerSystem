@@ -5,12 +5,13 @@ Database Design:
 ![Database Scheama](https://user-images.githubusercontent.com/71522419/234503281-ee24169a-c2f9-4520-8924-d7639b10efb9.jpg)
 
 
+#Feature
 
-#Features:-
--Buy A Stock
--Sell A stock
--See Transaction
--Manage Wallet
+  1. Buy A stock
+  2. Sell A stock
+  3. See transaction
+  4. Manage Wallet
+  
 The database consists of the following tables:
 
 Broker - stores information about the broker, including their username and password.
