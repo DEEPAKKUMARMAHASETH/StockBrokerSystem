@@ -1,4 +1,4 @@
-# dainty-knee-9326-
+# Stock Broker System
 This is a Stock Broker System that allows customers to trade and invest in shares. The system consists of two types of users: brokers and customers. Brokers have access to functions such as viewing customers, adding new stocks, viewing all stocks, deleting customers, deleting stocks, and logging out. Customers have access to functions such as signing up, logging in, viewing all stocks, buying and selling stocks, viewing transaction history, adding and withdrawing funds, logging out, and deleting their account.
 
 Database Design:
