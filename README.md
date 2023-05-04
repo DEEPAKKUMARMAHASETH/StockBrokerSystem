@@ -35,3 +35,5 @@ The program handles exceptions such as duplicate email, incorrect stock name, ba
 Dependencies:
 
 The program uses Java and MySQL. The required dependencies are included in the pom.xml file.
+<h1 align="center">This text will be centered.</h1>
+
